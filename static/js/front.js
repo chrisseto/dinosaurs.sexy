@@ -17,7 +17,7 @@ getThat.header = function() {
 };
 
 getThat.emailSelectBtn = function() {
-    return m('button.btn.btn-default.dropdown-toggle[type="button"][data-toggle="dropdown"]', [
+    return m('button.btn.btn-default.dropdown-toggle[type="button"][data-toggle="dropdown"][style="border-bottom-right-radius: 0px;border-top-right-radius: 0px"]', [
         'Select a Domain ',
         m('span.caret'),
     ]);
