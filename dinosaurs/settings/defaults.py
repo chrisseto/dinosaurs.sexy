@@ -1,2 +1,3 @@
-DOMAIN = 'dinosaurs.sexy'
+DEBUG = True
 TOKEN = 'YOUTOKENHERE'
+DOMAIN = 'dinosaurs.sexy'
