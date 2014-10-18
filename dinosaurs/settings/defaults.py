@@ -1,3 +1,4 @@
 DEBUG = True
-TOKEN = 'YOUTOKENHERE'
-DOMAIN = 'dinosaurs.sexy'
+DOMAINS = {
+    'dinosaurs.sexy': 'YOURTOKENHERE'
+}

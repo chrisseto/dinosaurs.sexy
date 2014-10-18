@@ -3,4 +3,8 @@ from dinosaurs.settings.defaults import *
 from dinosaurs.settings.local import *
 
 
-connection = Connection(auth=TOKEN, domain=DOMAIN)
+connections = [
+    Connection(auth=token, domain=domain)
+    for token, domain
+    in DOMAINS.items()
+]
