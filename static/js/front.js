@@ -1,22 +1,23 @@
 var getThat = {};
 
-getThat.vm = {};
-
-getThat.vm.init = function() {
+getThat.viewModel = function() {
     self = this;
 
-    self.domains = [];
-    self.currentDomain = m.prop('');
+    self.init = function() {
+        self.domains = [];
+        self.currentDomain = m.prop('');
 
-    m.request({method: "GET", url: "/api/v1/domains"}).then(function(ret) {
-        self.domains = ret.availableDomains;
-        self.currentDomain(self.domains[0]);
-    });
+        m.request({method: "GET", url: "/api/v1/domains"}).then(function(ret) {
+            self.domains = ret.availableDomains;
+            self.currentDomain(self.domains[0]);
+        });
+    };
 };
 
 
 getThat.controller = function() {
-    getThat.vm.init();
+    this.vm = new getThat.viewModel();
+    this.vm.init();
 };
 
 getThat.header = function() {
@@ -31,31 +32,29 @@ getThat.header = function() {
     ]);
 };
 
-getThat.emailSelectBtn = function() {
+getThat.emailSelectBtn = function(ctrl) {
     return m('button.btn.btn-default.dropdown-toggle[type="button"][data-toggle="dropdown"][style="border-bottom-right-radius: 0px;border-top-right-radius: 0px"]', [
-        '@' + this.vm.currentDomain() + ' ',
+        '@' + ctrl.vm.currentDomain() + ' ',
         m('span.caret'),
     ]);
 };
 
-getThat.emailSelectDropdown = function() {
-    self = this;
-
-    return m('ul.dropdown-menu[role="menu"]', self.vm.domains.map(function(domain, index) {
+getThat.emailSelectDropdown = function(ctrl) {
+    return m('ul.dropdown-menu[role="menu"]', ctrl.vm.domains.map(function(domain, index) {
         return m('li', [
-            m('a[href="#"]', {onclick: m.withAttr('text', self.vm.currentDomain)}, domain)
+            m('a[href="#"]', {onclick: m.withAttr('text', ctrl.vm.currentDomain)}, domain)
         ]);
     }));
 };
 
-getThat.input = function() {
+getThat.input = function(ctrl) {
     return m('.row', [
         m('.col-md-offset-1.col-md-10', [
             m('.input-group', [
                 m('input.form-control[type="text"'),
                 m('.input-group-btn', [
-                    this.emailSelectBtn(),
-                    this.emailSelectDropdown(),
+                    this.emailSelectBtn(ctrl),
+                    this.emailSelectDropdown(ctrl),
                     m('button.btn.btn-success[type="button"]', [
                         m('span.glyphicon.glyphicon-credit-card'),
                         ' Get It!'
@@ -68,8 +67,8 @@ getThat.input = function() {
 
 getThat.view = function(ctrl) {
     return m('.container', [
-        this.header(),
-        this.input()
+        this.header(ctrl),
+        this.input(ctrl)
     ]);
 };
 
