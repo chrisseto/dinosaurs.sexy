@@ -1,7 +1,20 @@
 var getThat = {};
 
-getThat.controller = function() {
+getThat.vm = {};
 
+getThat.vm.init = function() {
+    self = this;
+
+    self.domains = [];
+
+    m.request({method: "GET", url: "/api/v1/domains"}).then(function(ret) {
+        self.domains = ret.availableDomains;
+    });
+};
+
+
+getThat.controller = function() {
+    getThat.vm.init();
 };
 
 getThat.header = function() {
@@ -24,11 +37,11 @@ getThat.emailSelectBtn = function() {
 };
 
 getThat.emailSelectDropdown = function() {
-    return m('ul.dropdown-menu[role="menu"]', [
-        m('li', [
-            m('a[href="#"]', 'Test')
-        ])
-    ]);
+    return m('ul.dropdown-menu[role="menu"]', this.vm.domains.map(function(domain, index) {
+        return m('li', [
+            m('a[href]="#"', domain)
+        ]);
+    }));
 };
 
 getThat.input = function() {
