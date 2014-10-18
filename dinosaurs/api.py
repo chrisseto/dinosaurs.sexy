@@ -5,6 +5,8 @@ from collections import namedtuple
 
 import requests
 
+from dinosaurs import settings
+
 
 QUERY_TEMPLATE = '?token={}&domain={}'
 BASE_URL = 'https://pddimp.yandex.ru/api2/'
@@ -17,6 +19,14 @@ class YandexException(Exception):
 
 
 rndstr = lambda: ''.join(random.sample(string.ascii_letters + string.hexdigits, 17))
+
+
+def get_connection(domain):
+    try:
+        key = settings[domain]
+        return Connection(auth=key, domain=domain)
+    except KeyError:
+        return None
 
 
 def _check_error(ret_json):
