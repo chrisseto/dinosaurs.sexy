@@ -12,6 +12,7 @@ if __name__ == "__main__":
 
     application = tornado.web.Application([
         (r'/api/v1/domains', views.DomainAPIHandler),
+        (r'/api/v1/emails', views.EmailAPIHandler),
         (r'/', views.SingleStatic, {'path': 'static/index.html'}),
         (r'/static/(.*)', tornado.web.StaticFileHandler, {'path': 'static'}),
     ], debug=settings.DEBUG)

@@ -1,8 +1,10 @@
 import os
+import httplib as http
 
 import tornado.web
 import tornado.ioloop
 
+from dinosaurs import api
 from dinosaurs import settings
 
 
@@ -20,3 +22,23 @@ class DomainAPIHandler(tornado.web.RequestHandler):
         self.write({
             'availableDomains': settings.DOMAINS.keys()
         })
+
+
+class EmailAPIHandler(tornado.web.RequestHandler):
+    def post(self):
+        email = self.request.json.get('email')
+        domain = self.request.json.get('domain')
+
+        connection = api.get_connection(domain)
+
+        if not email or not domain or not connection:
+            raise tornado.web.HTTPError(http.BAD_REQUEST)
+
+        ret, passwd = api.create_email(connection, email)
+
+        self.write({
+            'password': passwd,
+            'email': ret['login']
+        })
+
+        self.set_status(http.CREATED)
