@@ -3,6 +3,8 @@ import os
 import tornado.web
 import tornado.ioloop
 
+from dinosaurs import settings
+
 
 class SingleStatic(tornado.web.StaticFileHandler):
     def initialize(self, path):
@@ -11,3 +13,10 @@ class SingleStatic(tornado.web.StaticFileHandler):
 
     def get(self, path=None, include_body=True):
         super(SingleStatic, self).get(self.filename, include_body)
+
+
+class DomainAPIHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.write({
+            'availableDomains': settings.DOMAINS.keys()
+        })
