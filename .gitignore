@@ -55,3 +55,4 @@ target/
 local.py
 static/vendor/
 node_modules
+static/js/
