@@ -54,3 +54,4 @@ docs/_build/
 target/
 local.py
 static/vendor/
+node_modules
