@@ -1,11 +1,29 @@
-getThat.emailSelectBtn = function(ctrl) {
-    return m('button.btn.btn-default.dropdown-toggle[type="button"][data-toggle="dropdown"][style="border-bottom-right-radius: 0px;border-top-right-radius: 0px"]', [
+var m = require('mithril');
+
+var header = function() {
+    return m('.row', [
+        m('.col-md-offset-1.col-md-10', [
+            m('.jumbotron', [
+                m('h1', [
+                    m('a[href="//getthat.email"]', 'Get That Email')
+                ])
+            ])
+        ])
+    ]);
+};
+
+var emailSelectBtn = function(ctrl) {
+    return m('button[data-toggle="dropdown"]', {
+        class: 'btn btn-default dropdown-toggle',
+        type: 'button',
+        style: 'border-bottom-right-radius: 0px;border-top-right-radius: 0px'
+    }, [
         '@' + ctrl.vm.currentDomain() + ' ',
         m('span.caret'),
     ]);
 };
 
-getThat.emailSelectDropdown = function(ctrl) {
+var emailSelectDropdown = function(ctrl) {
     return m('ul.dropdown-menu[role="menu"]', ctrl.vm.domains.map(function(domain, index) {
         return m('li', [
             m('a[href="#"]', {onclick: m.withAttr('text', ctrl.vm.currentDomain)}, domain)
@@ -13,14 +31,14 @@ getThat.emailSelectDropdown = function(ctrl) {
     }));
 };
 
-getThat.input = function(ctrl) {
+var input = function(ctrl) {
     return m('.row', [
         m('.col-md-offset-1.col-md-10', [
             m('.input-group', [
                 m('input.form-control[type="text"'),
                 m('.input-group-btn', [
-                    this.emailSelectBtn(ctrl),
-                    this.emailSelectDropdown(ctrl),
+                    emailSelectBtn(ctrl),
+                    emailSelectDropdown(ctrl),
                     m('button.btn.btn-success[type="button"]', [
                         m('span.glyphicon.glyphicon-credit-card'),
                         ' Get It!'
@@ -31,9 +49,9 @@ getThat.input = function(ctrl) {
     ]);
 };
 
-getThat.view = function(ctrl) {
+module.exports = function(ctrl) {
     return m('.container', [
-        this.header(ctrl),
-        this.input(ctrl)
+        header(ctrl),
+        input(ctrl)
     ]);
 };

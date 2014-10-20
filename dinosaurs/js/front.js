@@ -20,17 +20,6 @@ getThat.controller = function() {
     this.vm.init();
 };
 
-getThat.header = function() {
-    return m('.row', [
-        m('.col-md-offset-1.col-md-10', [
-            m('.jumbotron', [
-                m('h1', [
-                    m('a[href="//getthat.email"]', 'Get That Email')
-                ])
-            ])
-        ])
-    ]);
-};
 
 
 //initialize
