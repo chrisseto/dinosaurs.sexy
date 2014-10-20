@@ -3,7 +3,7 @@ var m = require('mithril');
 
 
 getThat.view = require('dinosaurs/views/index.js');
-getThat.controller = function() {};
+getThat.controller = require('dinosaurs/controllers/index.js');
 
 m.route(document.body, '/', {
     '/': getThat,

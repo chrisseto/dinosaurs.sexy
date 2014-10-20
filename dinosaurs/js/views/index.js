@@ -18,15 +18,15 @@ var emailSelectBtn = function(ctrl) {
         type: 'button',
         style: 'border-bottom-right-radius: 0px;border-top-right-radius: 0px'
     }, [
-        '@' + ctrl.vm.currentDomain() + ' ',
+        '@' + ctrl.currentDomain() + ' ',
         m('span.caret'),
     ]);
 };
 
 var emailSelectDropdown = function(ctrl) {
-    return m('ul.dropdown-menu[role="menu"]', ctrl.vm.domains.map(function(domain, index) {
+    return m('ul.dropdown-menu[role="menu"]', ctrl.domains.map(function(domain, index) {
         return m('li', [
-            m('a[href="#"]', {onclick: m.withAttr('text', ctrl.vm.currentDomain)}, domain)
+            m('a[href="#"]', {onclick: m.withAttr('text', ctrl.currentDomain)}, domain)
         ]);
     }));
 };
