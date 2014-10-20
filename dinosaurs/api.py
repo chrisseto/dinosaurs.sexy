@@ -23,7 +23,7 @@ rndstr = lambda: ''.join(random.sample(string.ascii_letters + string.hexdigits, 
 
 def get_connection(domain):
     try:
-        key = settings[domain]
+        key = settings.DOMAINS[domain]
         return Connection(auth=key, domain=domain)
     except KeyError:
         return None
