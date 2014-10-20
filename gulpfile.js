@@ -3,7 +3,9 @@ var del = require('del');
 var gulp = require('gulp');
 var gutil = require('gulp-util');
 var uglify = require('gulp-uglify');
+var concatCss = require('gulp-concat-css');
 
+var cssify = require('cssify');
 var watchify = require('watchify');
 var browserify = require('browserify');
 
@@ -13,10 +15,19 @@ var source = require('vinyl-source-stream');
 
 
 gulp.task('clean', function(cb) {
-  del(['static/js'], cb);
+  del(['static/fonts', 'static/css', 'static/js'], cb);
 });
 
-gulp.task('build', ['clean'], function() {
+gulp.task('css', function(cb){
+    gulp.src('./node_modules/bootstrap/dist/css/*.min.css')
+    .pipe(concatCss("site.min.css"))
+    .pipe(gulp.dest('./static/css/'));
+
+    gulp.src('./node_modules/bootstrap/dist/fonts/*')
+    .pipe(gulp.dest('./static/fonts/'));
+});
+
+gulp.task('build', ['clean', 'css'], function() {
   var bundler = watchify(browserify({
       cache: {}, packageCache: {}, fullPaths: true,
       entries: 'dinosaurs/index.js',
@@ -30,13 +41,13 @@ gulp.task('build', ['clean'], function() {
     .pipe(gulp.dest('./static/js'));
 });
 
-gulp.task('develop', ['clean'], function() {
+gulp.task('develop', function() {
   var bundler = watchify(browserify({
       cache: {}, packageCache: {}, fullPaths: true,
       entries: 'dinosaurs/index.js',
       debug: true
     }));
-
+    // bundler.transform('cssify');
   bundler.on('update', rebundle);
 
   function rebundle() {
@@ -51,4 +62,4 @@ gulp.task('develop', ['clean'], function() {
 });
 
 
-gulp.task('default', ['develop']);
+gulp.task('default', ['clean', 'css', 'develop']);
