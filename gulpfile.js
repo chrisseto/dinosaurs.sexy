@@ -14,11 +14,11 @@ var source = require('vinyl-source-stream');
 
 
 
-gulp.task('clean', function(cb) {
-  del(['static/fonts', 'static/css', 'static/js'], cb);
+gulp.task('clean', function() {
+  del(['static/css', 'static/js']);
 });
 
-gulp.task('css', function(cb){
+gulp.task('css', function(){
     gulp.src('./node_modules/bootstrap/dist/css/*.min.css')
     .pipe(concatCss("site.min.css"))
     .pipe(gulp.dest('./static/css/'));
@@ -28,13 +28,11 @@ gulp.task('css', function(cb){
 });
 
 gulp.task('build', ['clean', 'css'], function() {
-  var bundler = watchify(browserify({
-      cache: {}, packageCache: {}, fullPaths: true,
+  var bundler = browserify({
       entries: 'dinosaurs/index.js',
-    }));
+    });
 
-    return bundler.bundle()
-    .on('error', gutil.log.bind(gutil, 'Browserify Error'))
+    bundler.bundle()
     .pipe(source('site.min.js'))
     .pipe(buffer())
     .pipe(uglify())
