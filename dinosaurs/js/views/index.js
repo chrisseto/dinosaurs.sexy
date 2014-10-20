@@ -2,10 +2,13 @@ var m = require('mithril');
 
 var header = function() {
     return m('.row', [
+        m('br'),
         m('.col-md-offset-1.col-md-10', [
             m('.jumbotron', [
-                m('h1', [
-                    m('a[href="//getthat.email"]', 'Get That Email')
+                m('h1[style="text-align:center"]', [
+                    m('a[href="//getthat.email"]', 'Get That Email'),
+                    m('br'),
+                    m('small', 'You know you want it.')
                 ])
             ])
         ])
