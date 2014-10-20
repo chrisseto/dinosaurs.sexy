@@ -1,16 +1,15 @@
 var del = require('del');
+
 var gulp = require('gulp');
-var watchify = require('watchify');
-var concat = require('gulp-concat');
 var gutil = require('gulp-util');
 var uglify = require('gulp-uglify');
-var browserify = require('browserify');
-var source = require('vinyl-source-stream');
-var buffer = require('vinyl-buffer');
 
-var paths = {
-  scripts: ['dinosaurs/js/**/*.js'],
-};
+var watchify = require('watchify');
+var browserify = require('browserify');
+
+var buffer = require('vinyl-buffer');
+var source = require('vinyl-source-stream');
+
 
 
 gulp.task('clean', function(cb) {
@@ -33,14 +32,11 @@ gulp.task('build', ['clean'], function() {
 
 gulp.task('develop', ['clean'], function() {
   var bundler = watchify(browserify({
-      // Required watchify args
       cache: {}, packageCache: {}, fullPaths: true,
-      // Specify the entry point of your app
       entries: 'dinosaurs/index.js',
-      // Add file extentions to make optional in your requires
-      // Enable source maps!
       debug: true
     }));
+
   bundler.on('update', rebundle);
 
   function rebundle() {
