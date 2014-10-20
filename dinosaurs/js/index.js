@@ -1,3 +1,6 @@
+window.$ = window.jQuery = require('jquery');
+require('bootstrap/dist/js/bootstrap.js');
+
 var getThat = {};
 var m = require('mithril');
 
