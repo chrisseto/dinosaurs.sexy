@@ -53,6 +53,6 @@ docs/_build/
 # PyBuilder
 target/
 local.py
-static/vendor/
 node_modules
-static/js/
+static/
+!static/index.html
