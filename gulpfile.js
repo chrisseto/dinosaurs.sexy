@@ -3,9 +3,9 @@ var del = require('del');
 var gulp = require('gulp');
 var gutil = require('gulp-util');
 var uglify = require('gulp-uglify');
+var minifyCSS = require('gulp-minify-css');
 var concatCss = require('gulp-concat-css');
 
-var cssify = require('cssify');
 var watchify = require('watchify');
 var browserify = require('browserify');
 
@@ -21,6 +21,7 @@ gulp.task('clean', function() {
 gulp.task('css', function(){
     gulp.src('./node_modules/bootstrap/dist/css/*.min.css')
     .pipe(concatCss("site.min.css"))
+    .pipe(minifyCSS())
     .pipe(gulp.dest('./static/css/'));
 
     gulp.src('./node_modules/bootstrap/dist/fonts/*')
