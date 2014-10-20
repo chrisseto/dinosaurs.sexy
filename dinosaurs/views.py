@@ -1,4 +1,5 @@
 import os
+import json
 import httplib as http
 
 import tornado.web
@@ -26,8 +27,13 @@ class DomainAPIHandler(tornado.web.RequestHandler):
 
 class EmailAPIHandler(tornado.web.RequestHandler):
     def post(self):
-        email = self.request.json.get('email')
-        domain = self.request.json.get('domain')
+        try:
+            req_json = json.loads(self.request.body)
+        except ValueError:
+            raise tornado.web.HTTPError(http.BAD_REQUEST)
+
+        email = req_json.get('email')
+        domain = req_json.get('domain')
 
         connection = api.get_connection(domain)
 
