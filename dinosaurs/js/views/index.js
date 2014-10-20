@@ -35,11 +35,15 @@ var input = function(ctrl) {
     return m('.row', [
         m('.col-md-offset-1.col-md-10', [
             m('.input-group', [
-                m('input.form-control[type="text"'),
+                m('input.form-control[type="text"]', {
+                    onchange: m.withAttr("value", ctrl.email)
+                }),
                 m('.input-group-btn', [
                     emailSelectBtn(ctrl),
                     emailSelectDropdown(ctrl),
-                    m('button.btn.btn-success[type="button"]', [
+                    m('button.btn.btn-success[type="button"]', {
+                        onclick: ctrl.getIt
+                    },[
                         m('span.glyphicon.glyphicon-credit-card'),
                         ' Get It!'
                     ])
