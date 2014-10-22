@@ -25,12 +25,20 @@ module.exports = function() {
                 'domain': self.currentDomain(),
                 'email': self.email()
             }
-        }).then(function(ret) {
-            userData.email(ret.email);
-            userData.password(ret.password);
-            userData.domain(ret.domain);
-            m.route('/gotit');
-        });
+        }).then(self.gotIt, self.lostIt);
+    };
+
+    self.gotIt = function(ret) {
+        userData.email(ret.email);
+        userData.password(ret.password);
+        userData.domain(ret.domain);
+        return m.route('/gotit');
+    };
+
+    self.lostIt = function() {
+        userData.email(self.email());
+        userData.domain(self.currentDomain());
+        return m.route('/lostit');
     };
 
     self.init();
