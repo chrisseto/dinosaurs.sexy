@@ -6,7 +6,7 @@ var header = function() {
         m('.col-md-offset-1.col-md-10', [
             m('.jumbotron', [
                 m('h1[style="text-align:center"]', [
-                    m('a[href="/"]', 'Get That Email'),
+                    "Get The Email You've Always Wanted",
                     m('br'),
                     m('small', 'You know you want it.')
                 ])
