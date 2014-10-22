@@ -4,11 +4,13 @@ var header = function() {
     return m('.row', [
         m('br'),
         m('.col-md-offset-1.col-md-10', [
-            m('.jumbotron', [
-                m('h1[style="text-align:center"]', [
+            m('.jumbotron[style="text-align:center"]', [
+                m('h1', [
                     "Get The Email You've Always Wanted",
-                    m('br'),
-                    m('small', 'You know you want it.')
+                ]),
+                m('blockquote[style="border-left:none"]', [
+                    m('p', 'You know you want it.'),
+                    m('footer', 'Karl Marx Probably')
                 ])
             ])
         ])

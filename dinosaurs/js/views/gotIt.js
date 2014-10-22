@@ -9,7 +9,7 @@ var header = function() {
                 m('h1', [
                     'You Got It!',
                     m('br'),
-                    m('a[href="mailto:"' + userData.email() + '"]', userData.email()),
+                    m('a[href="mailto:' + userData.email() + '"]', userData.email()),
                 ]),
                 m('p', [
                     'Your password is "' + userData.password() + '"',
@@ -20,7 +20,7 @@ var header = function() {
                     ' and change it.'
                 ]),
                 m('small', [
-                    m('a[href="/"', 'Get another.')
+                    m('a[href="/"]', 'Get another.')
                 ])
             ])
         ])
