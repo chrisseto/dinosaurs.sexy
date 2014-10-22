@@ -10,7 +10,7 @@ var header = function() {
                 ]),
                 m('blockquote[style="border-left:none"]', [
                     m('p', 'You know you want it.'),
-                    m('footer', 'Karl Marx Probably')
+                    m('footer', 'Karl Marx. Probably.')
                 ])
             ])
         ])
