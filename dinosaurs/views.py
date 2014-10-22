@@ -26,6 +26,12 @@ class DomainAPIHandler(tornado.web.RequestHandler):
 
 
 class EmailAPIHandler(tornado.web.RequestHandler):
+    def write_error(self, status_code, **kwargs):
+        self.finish({
+            "code": status_code,
+            "message": self._reason,
+        })
+
     def post(self):
         try:
             req_json = json.loads(self.request.body)
@@ -40,7 +46,13 @@ class EmailAPIHandler(tornado.web.RequestHandler):
         if not email or not domain or not connection:
             raise tornado.web.HTTPError(http.BAD_REQUEST)
 
-        ret, passwd = api.create_email(connection, email)
+        try:
+            ret, passwd = api.create_email(connection, email)
+        except api.YandexException as e:
+            if e.message != 'occupied':
+                raise
+            self.write({})
+            raise tornado.web.HTTPError(http.FORBIDDEN)
 
         self.write({
             'password': passwd,
