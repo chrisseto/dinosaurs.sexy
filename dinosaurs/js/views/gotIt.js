@@ -28,6 +28,10 @@ var header = function() {
 };
 
 module.exports = function(ctrl) {
+    if (userData.email() === '') {
+        return m.route('/');
+    }
+
     return m('.container', [
         header(),
     ]);
