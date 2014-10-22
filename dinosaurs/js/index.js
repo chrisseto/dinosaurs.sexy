@@ -6,12 +6,12 @@ var m = require('mithril');
 var getThat = {};
 var gotThat = {};
 
-
 getThat.view = require('dinosaurs/views/index.js');
 getThat.controller = require('dinosaurs/controllers/index.js');
 
 gotThat.view = require('dinosaurs/views/gotIt.js');
-gotThat.controller = function() {};
+gotThat.controller = function(){};
+
 
 m.route(document.body, '/', {
     '/': getThat,

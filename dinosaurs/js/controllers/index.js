@@ -1,4 +1,6 @@
 var m = require('mithril');
+var userData = require('../models/index.js');
+
 
 module.exports = function() {
     self = this;
@@ -23,6 +25,11 @@ module.exports = function() {
                 'domain': self.currentDomain(),
                 'email': self.email()
             }
+        }).then(function(ret) {
+            userData.email(ret.email);
+            userData.password(ret.password);
+            userData.domain(ret.domain);
+            m.route('/gotit');
         });
     };
 
