@@ -44,7 +44,8 @@ class EmailAPIHandler(tornado.web.RequestHandler):
 
         self.write({
             'password': passwd,
-            'email': ret['login']
+            'email': ret['login'],
+            'domain': ret['domain']
         })
 
         self.set_status(http.CREATED)
