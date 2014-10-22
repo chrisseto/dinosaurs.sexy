@@ -19,7 +19,7 @@ gulp.task('clean', function() {
 });
 
 gulp.task('css', function(){
-    gulp.src('./node_modules/bootstrap/dist/css/*.min.css')
+    gulp.src(['./node_modules/bootstrap/dist/css/*.min.css', 'dinosaurs/css/**/*.css'])
     .pipe(concatCss("site.min.css"))
     .pipe(minifyCSS())
     .pipe(gulp.dest('./static/css/'));
