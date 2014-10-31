@@ -6,10 +6,13 @@ import httplib as http
 import tornado.web
 
 from dinosaurs import api
+
 from dinosaurs.transaction import check_payment
-from dinosaurs.exceptions import AddressReserved
 from dinosaurs.transaction import get_transaction
+
+from dinosaurs.exceptions import AddressReserved
 from dinosaurs.exceptions import AddressTakenError
+from dinosaurs.exceptions import PaymentRequiredError
 
 
 rndstr = lambda: ''.join(random.sample(string.ascii_letters + string.hexdigits, 17))
