@@ -1,12 +1,12 @@
-import random
-import string
-
 from collections import namedtuple
 
 import requests
 
 from dinosaurs import settings
-
+from dinosaurs.util import rndstr
+from dinosaurs.exceptions import YandexException
+from dinosaurs.exceptions import AddressTakenError
+from dinosaurs.exceptions import InvalidDomainError
 
 QUERY_TEMPLATE = '?token={}&domain={}'
 BASE_URL = 'https://pddimp.yandex.ru/api2/'
@@ -14,23 +14,18 @@ BASE_URL = 'https://pddimp.yandex.ru/api2/'
 Connection = namedtuple('Connection', ['auth', 'domain'])
 
 
-class YandexException(Exception):
-    pass
-
-
-rndstr = lambda: ''.join(random.sample(string.ascii_letters + string.hexdigits, 17))
-
-
 def get_connection(domain):
     try:
         key = settings.DOMAINS[domain]
         return Connection(auth=key, domain=domain)
     except KeyError:
-        return None
+        raise InvalidDomainError(domain)
 
 
 def _check_error(ret_json):
     if ret_json.get('success') == 'error':
+        if ret_json['error'] == 'occupied':
+            raise AddressTakenError()
         raise YandexException(ret_json['error'])
 
 
