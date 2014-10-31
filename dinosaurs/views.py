@@ -1,11 +1,11 @@
 import os
-import json
 import httplib as http
 
 import tornado.web
 import tornado.ioloop
 
 from dinosaurs import api
+from dinosaurs import util
 from dinosaurs import settings
 
 
@@ -25,39 +25,28 @@ class DomainAPIHandler(tornado.web.RequestHandler):
         })
 
 
-class EmailAPIHandler(tornado.web.RequestHandler):
-    def write_error(self, status_code, **kwargs):
-        self.finish({
-            "code": status_code,
-            "message": self._reason,
-        })
+class EmailAPIHandler(util.JSONApiHandler):
+    ARGS = {
+        'POST': ['email', 'domain']
+    }
 
     def post(self):
-        try:
-            req_json = json.loads(self.request.body)
-        except ValueError:
-            raise tornado.web.HTTPError(http.BAD_REQUEST)
-
-        email = req_json.get('email')
-        domain = req_json.get('domain')
-
-        connection = api.get_connection(domain)
-
-        if not email or not domain or not connection:
-            raise tornado.web.HTTPError(http.BAD_REQUEST)
+        email = self.json['email']
+        domain = self.json['domain']
 
         try:
-            ret, passwd = api.create_email(connection, email)
+            self.write({
+                'password': util.create_email(email, domain)
+            })
+            self.set_status(http.CREATED)
+        except AddressTakenError as e:
+            raise tornado.web.HTTPError(http.BAD_REQUEST, reason='taken')
+        except PaymentRequiredError as e:
+            self.set_status(http.PAYMENT_REQUIRED)
+            self.write({
+                'address': address,
+                'amount': 500
+            })
         except api.YandexException as e:
-            if e.message != 'occupied':
-                raise
             self.write({})
             raise tornado.web.HTTPError(http.FORBIDDEN)
-
-        self.write({
-            'password': passwd,
-            'email': ret['login'],
-            'domain': ret['domain']
-        })
-
-        self.set_status(http.CREATED)
