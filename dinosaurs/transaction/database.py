@@ -6,7 +6,7 @@ from dinosaurs import settings
 from dinosaurs.transaction.coin import generate_address
 
 
-db = SqliteDatabase(settings.database)
+db = SqliteDatabase(settings.DATABASE)
 
 
 class Transaction(Model):

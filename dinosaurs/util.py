@@ -1,21 +1,13 @@
 import json
-import random
-import string
 import httplib as http
 
 import tornado.web
 
 from dinosaurs import api
-
-from dinosaurs.transaction import check_payment
-from dinosaurs.transaction import get_transaction
-
 from dinosaurs.exceptions import AddressReserved
+from dinosaurs.transaction import get_transaction
 from dinosaurs.exceptions import AddressTakenError
-from dinosaurs.exceptions import PaymentRequiredError
-
-
-rndstr = lambda: ''.join(random.sample(string.ascii_letters + string.hexdigits, 17))
+from dinosaurs.transaction import check_transaction
 
 
 def create_email(address, domain, client_secret):
@@ -27,7 +19,7 @@ def create_email(address, domain, client_secret):
     if transaction.secret != client_secret and not transaction.expired:
         raise AddressReserved(address)
 
-    check_payment(transaction)
+    check_transaction(transaction)
 
     connection = api.get_connection(domain)
     _, passwd = api.create_email(connection, address)
@@ -51,6 +43,7 @@ class JSONApiHandler(tornado.web.RequestHandler):
         except AttributeError:
             try:
                 self._json = json.loads(self.request.body)
+                return self._json
             except ValueError:
                 raise tornado.web.HTTPError(http.BAD_REQUEST)
 

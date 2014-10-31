@@ -1,15 +1,18 @@
+import random
+import string
 from collections import namedtuple
 
 import requests
 
 from dinosaurs import settings
-from dinosaurs.util import rndstr
 from dinosaurs.exceptions import YandexException
 from dinosaurs.exceptions import AddressTakenError
 from dinosaurs.exceptions import InvalidDomainError
 
 QUERY_TEMPLATE = '?token={}&domain={}'
 BASE_URL = 'https://pddimp.yandex.ru/api2/'
+
+rndstr = lambda: ''.join(random.sample(string.ascii_letters + string.hexdigits, 17))
 
 Connection = namedtuple('Connection', ['auth', 'domain'])
 

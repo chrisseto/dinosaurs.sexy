@@ -1,4 +1,5 @@
 from dinosaurs.exceptions import PaymentRequiredError
+from dinosaurs.transaction.coin import check_balance
 from dinosaurs.transaction.database import Transaction
 
 
@@ -9,7 +10,7 @@ def check_transaction(transaction):
     return True
 
 
-def create_transaction(email, domain):
+def get_transaction(email, domain):
     model = Transaction.get(
         Transaction.email == email &
         Transaction.domain == domain
