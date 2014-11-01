@@ -24,4 +24,7 @@ class AddressTakenError(YandexException):
 
 
 class AddressReserved(YandexException):
-    pass
+    def __init__(self, address, time_left):
+        self.time_left = time_left
+        self.email = address
+        super(AddressReserved, self).__init__('Address %s is unavailable for %d more seconds' % (address, time_left))
