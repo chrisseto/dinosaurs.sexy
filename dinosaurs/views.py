@@ -2,11 +2,11 @@ import os
 import httplib as http
 
 import tornado.web
-import tornado.ioloop
 
-from dinosaurs import api
 from dinosaurs import util
 from dinosaurs import settings
+from dinosaurs import exceptions
+from dinosaurs import transaction
 
 
 class SingleStatic(tornado.web.StaticFileHandler):
@@ -25,7 +25,7 @@ class DomainAPIHandler(tornado.web.RequestHandler):
         })
 
 
-class EmailAPIHandler(util.JSONApiHandler):
+class TransactionAPIHandler(util.JSONApiHandler):
     ARGS = {
         'POST': ['email', 'domain']
     }
@@ -35,18 +35,48 @@ class EmailAPIHandler(util.JSONApiHandler):
         domain = self.json['domain']
 
         try:
+            self.set_status(http.CREATED)
             self.write({
-                'password': util.create_email(email, domain)
+                'id': transaction.create_transaction(email, domain).tid
+            })
+        except exceptions.AddressTakenError:
+            raise tornado.web.HTTPError(http.BAD_REQUEST, reason='taken')
+        except exceptions.AddressReserved as e:
+            self.set_status(http.BAD_REQUEST)
+            self.write({
+                'reason': 'reserved',
+                'timeLeft': e.time_left
+            })
+        except exceptions.InvalidDomainError:
+            raise tornado.web.HTTPError(http.BAD_REQUEST, reason='invalid domain')
+        except exceptions.InvalidEmailError:
+            raise tornado.web.HTTPError(http.BAD_REQUEST, reason='invalid email')
+
+
+class EmailAPIHandler(util.JSONApiHandler):
+    def get(self, transaction_id):
+        try:
+            transaction = util.resolve_transaction(transaction_id)
+
+            if not transaction_id:
+                raise tornado.web.HTTPError(http.NOT_FOUND)
+
+            self.write({
+                'password': transaction.password
             })
             self.set_status(http.CREATED)
-        except AddressTakenError as e:
-            raise tornado.web.HTTPError(http.BAD_REQUEST, reason='taken')
-        except PaymentRequiredError as e:
+        except exceptions.PaymentRequiredError as e:
             self.set_status(http.PAYMENT_REQUIRED)
             self.write({
                 'address': address,
                 'amount': 500
             })
-        except api.YandexException as e:
+        except exceptions.AddressTakenError:
+            raise tornado.web.HTTPError(http.BAD_REQUEST, reason='taken')
+        except exceptions.InvalidDomainError:
+            raise tornado.web.HTTPError(http.BAD_REQUEST, reason='invalid domain')
+        except exceptions.InvalidEmailError:
+            raise tornado.web.HTTPError(http.BAD_REQUEST, reason='invalid email')
+        except exceptions.YandexException as e:
             self.write({})
             raise tornado.web.HTTPError(http.FORBIDDEN)
