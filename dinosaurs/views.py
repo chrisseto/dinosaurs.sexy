@@ -56,27 +56,22 @@ class TransactionAPIHandler(util.JSONApiHandler):
 class EmailAPIHandler(util.JSONApiHandler):
     def get(self, transaction_id):
         try:
-            transaction = util.resolve_transaction(transaction_id)
+            t = transaction.get_transaction(transaction_id)
 
-            if not transaction_id:
+            if not t:
                 raise tornado.web.HTTPError(http.NOT_FOUND)
 
-            self.write({
-                'password': transaction.password
-            })
-            self.set_status(http.CREATED)
+            transaction.resolve_transaction(t)
         except exceptions.PaymentRequiredError as e:
             self.set_status(http.PAYMENT_REQUIRED)
             self.write({
-                'address': address,
-                'amount': 500
+                'address': t.address,
+                'amount': t.cost,
+                'delta': e.delta,
+                'timeLeft': t.time_left
             })
-        except exceptions.AddressTakenError:
-            raise tornado.web.HTTPError(http.BAD_REQUEST, reason='taken')
-        except exceptions.InvalidDomainError:
-            raise tornado.web.HTTPError(http.BAD_REQUEST, reason='invalid domain')
-        except exceptions.InvalidEmailError:
-            raise tornado.web.HTTPError(http.BAD_REQUEST, reason='invalid email')
-        except exceptions.YandexException as e:
-            self.write({})
-            raise tornado.web.HTTPError(http.FORBIDDEN)
+
+        self.write({
+            'password': transaction.password
+        })
+        self.set_status(http.CREATED)
