@@ -17,7 +17,7 @@ class Transaction(Model):
     cost = FloatField()
     address = CharField()
     started = DateTimeField()
-    tempPass = CharField(null=True)
+    temp_pass = CharField(null=True)
     email = CharField(index=True)
     domain = CharField(index=True)
     is_complete = BooleanField(default=False, index=True)
@@ -34,7 +34,7 @@ class Transaction(Model):
 
     @property
     def expired(self):
-        return self.seconds_left < 0
+        return not self.is_complete and self.seconds_left < 0
 
     @property
     def seconds_left(self):
