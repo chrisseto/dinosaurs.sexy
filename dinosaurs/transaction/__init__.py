@@ -1,5 +1,6 @@
 from peewee import IntegrityError
 
+from dinosaurs import api
 from dinosaurs import settings
 from dinosaurs.transaction.coin import get_cost
 from dinosaurs.exceptions import AddressReserved
@@ -15,11 +16,18 @@ def validate_email(address):
     return True  # TODO
 
 
-def check_transaction(transaction):
+def resolve_transaction(transaction):
     balance = check_balance(transaction.address)
     if transaction - balance > 0:
         raise PaymentRequiredError(transaction.cost - balance)
-    return True
+
+    connection = api.get_connection(transaction.domain)
+    passwd = api.create_email(connection, transaction.email)
+
+    transaction.temp_pass = passwd
+    transaction.is_complete = True
+
+    return passwd
 
 
 def create_transaction(email, domain):

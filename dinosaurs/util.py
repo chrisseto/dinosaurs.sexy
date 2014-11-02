@@ -4,10 +4,14 @@ import httplib as http
 import tornado.web
 
 from dinosaurs import api
+from dinosaurs import settings
 from dinosaurs.exceptions import AddressReserved
-from dinosaurs.transaction import get_transaction
 from dinosaurs.exceptions import AddressTakenError
 from dinosaurs.transaction import check_transaction
+
+
+def validate_email(address):
+    return True  # TODO
 
 
 def create_email(address, domain, client_secret):
