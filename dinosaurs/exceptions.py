@@ -4,7 +4,9 @@ class DinosaurError(Exception):
 
 
 class PaymentRequiredError(DinosaurError):
-    pass
+    def __init__(self, delta):
+        self.delta = delta
+        super(AddressReserved, self).__init__('%d more units required.' % delta)
 
 
 class YandexException(DinosaurError):
