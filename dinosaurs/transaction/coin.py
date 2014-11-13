@@ -18,7 +18,7 @@ def requires_connection(func):
 
 
 def get_cost():
-    return 0
+    return 1
 
 
 @requires_connection
@@ -28,4 +28,4 @@ def generate_address():
 
 @requires_connection
 def check_balance(addr):
-    return connection.getbalance(addr)
+    return float(connection.getbalance(addr))
