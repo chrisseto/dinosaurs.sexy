@@ -39,18 +39,20 @@ class TransactionAPIHandler(util.JSONApiHandler):
             self.write({
                 'id': transaction.create_transaction(email, domain).tid
             })
-        except exceptions.AddressTakenError:
-            raise tornado.web.HTTPError(http.BAD_REQUEST, reason='taken')
         except exceptions.AddressReserved as e:
             self.set_status(http.BAD_REQUEST)
             self.write({
                 'reason': 'reserved',
                 'timeLeft': e.time_left
             })
-        except exceptions.InvalidDomainError:
-            raise tornado.web.HTTPError(http.BAD_REQUEST, reason='invalid domain')
+        except exceptions.NoCoinServerError:
+            raise tornado.web.HTTPError(http.SERVICE_UNAVAILABLE)
+        except exceptions.AddressTakenError:
+            raise tornado.web.HTTPError(http.BAD_REQUEST, reason='taken')
         except exceptions.InvalidEmailError:
             raise tornado.web.HTTPError(http.BAD_REQUEST, reason='invalid email')
+        except exceptions.InvalidDomainError:
+            raise tornado.web.HTTPError(http.BAD_REQUEST, reason='invalid domain')
 
 
 class EmailAPIHandler(util.JSONApiHandler):
@@ -70,6 +72,10 @@ class EmailAPIHandler(util.JSONApiHandler):
                 'delta': e.delta,
                 'timeLeft': t.time_left
             })
+        except exceptions.NoSuchTransactionError:
+            raise tornado.web.HTTPError(http.NOT_FOUND)
+        except exceptions.NoCoinServerError:
+            raise tornado.web.HTTPError(http.SERVICE_UNAVAILABLE)
 
         self.write({
             'password': transaction.password
