@@ -45,6 +45,7 @@ class TransactionAPIHandler(util.JSONApiHandler):
                 'reason': 'reserved',
                 'timeLeft': e.time_left
             })
+            return
         except exceptions.NoCoinServerError:
             raise tornado.web.HTTPError(http.SERVICE_UNAVAILABLE)
         except exceptions.AddressTakenError:
@@ -70,14 +71,13 @@ class EmailAPIHandler(util.JSONApiHandler):
                 'address': t.address,
                 'amount': t.cost,
                 'delta': e.delta,
-                'timeLeft': t.time_left
+                'secondsLeft': t.seconds_left
             })
+            return
         except exceptions.NoSuchTransactionError:
             raise tornado.web.HTTPError(http.NOT_FOUND)
         except exceptions.NoCoinServerError:
             raise tornado.web.HTTPError(http.SERVICE_UNAVAILABLE)
 
-        self.write({
-            'password': transaction.password
-        })
         self.set_status(http.CREATED)
+        self.write({'password': t.temp_pass})
