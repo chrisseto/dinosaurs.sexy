@@ -14,7 +14,7 @@ class NoSuchTransactionError(DinosaurError):
 class PaymentRequiredError(DinosaurError):
     def __init__(self, delta):
         self.delta = delta
-        super(AddressReserved, self).__init__('%d more units required.' % delta)
+        super(PaymentRequiredError, self).__init__('%d more units required.' % delta)
 
 
 class YandexException(DinosaurError):
