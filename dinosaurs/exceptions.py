@@ -3,6 +3,14 @@ class DinosaurError(Exception):
     pass
 
 
+class NoCoinServerError(DinosaurError):
+    pass
+
+
+class NoSuchTransactionError(DinosaurError):
+    pass
+
+
 class PaymentRequiredError(DinosaurError):
     def __init__(self, delta):
         self.delta = delta
