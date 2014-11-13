@@ -1,3 +1,4 @@
+from peewee import DoesNotExist
 from peewee import IntegrityError
 
 from dinosaurs import api
@@ -10,6 +11,7 @@ from dinosaurs.exceptions import InvalidDomainError
 from dinosaurs.transaction.coin import check_balance
 from dinosaurs.exceptions import PaymentRequiredError
 from dinosaurs.transaction.database import Transaction
+from dinosaurs.exceptions import NoSuchTransactionError
 
 
 def validate_email(address):
@@ -59,4 +61,7 @@ def create_transaction(email, domain):
 
 
 def get_transaction(tid):
-    return Transaction.get(Transaction.tid == tid)
+    try:
+        return Transaction.get(Transaction.tid == tid)
+    except DoesNotExist:
+        raise NoSuchTransactionError()
