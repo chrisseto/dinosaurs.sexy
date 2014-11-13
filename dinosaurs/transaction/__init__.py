@@ -20,7 +20,7 @@ def validate_email(address):
 
 def resolve_transaction(transaction):
     balance = check_balance(transaction.address)
-    if transaction - balance > 0:
+    if transaction.cost - balance > 0:
         raise PaymentRequiredError(transaction.cost - balance)
 
     connection = api.get_connection(transaction.domain)
